@@ -1,3 +1,4 @@
 TEMPLATE = subdirs
 
-SUBDIRS += machineflowadapter
+SUBDIRS += machineflowadapter \
+    astartsearch
