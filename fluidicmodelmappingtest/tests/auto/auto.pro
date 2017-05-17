@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += machineflowadapter \
-    astartsearch
+    astartsearch \
+    protocolAnalysis

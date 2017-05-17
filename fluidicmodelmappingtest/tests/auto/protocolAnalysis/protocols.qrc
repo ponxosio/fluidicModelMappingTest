@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/protocol">
+        <file>protocolos/switchingProtocol.js</file>
+    </qresource>
+</RCC>
