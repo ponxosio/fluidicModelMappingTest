@@ -109,9 +109,18 @@ std::shared_ptr<FluidicMachineModel> AstartsearchTest::makeMachineModel() {
     PluginConfiguration config;
     std::shared_ptr<PluginAbstractFactory> factory = nullptr;
 
-    std::shared_ptr<Function> pumpf = std::make_shared<PumpPluginFunction>(factory, config);
+    std::shared_ptr<Function> pumpf =
+            std::make_shared<PumpPluginFunction>(factory,
+                                                 config,
+                                                 PumpWorkingRange(300 * units::ml/units::hr,
+                                                                  600 * units::ml/units::hr));
+
     std::shared_ptr<Function> routef = std::make_shared<ValvePluginRouteFunction>(factory, config);
-    std::shared_ptr<Function> measureOd = std::make_shared<MeasureOdFunction>(factory, config, 100);
+    std::shared_ptr<Function> measureOd =
+            std::make_shared<MeasureOdFunction>(factory,
+                                                config,
+                                                100 * units::ml,
+                                                MeasureOdWorkingRange(500 * units::nm, 680 * units::nm));
 
     int c0 = mGraph->emplaceContainer(2, ContainerNode::open, 100.0);
     int c1 = mGraph->emplaceContainer(2, ContainerNode::open, 100.0);
@@ -161,11 +170,15 @@ void AstartsearchTest::makeTurbidostatAnalysis(std::vector<ContainerCharacterist
     cmedia.setType(ContainerNode::open);
     containerCharacteristics.push_back(cmedia);
 
+    std::shared_ptr<ComparableRangeInterface> odRange =
+            std::make_shared<MeasureOdWorkingRange>(650 * units::nm, 650 * units::nm);
+
     ContainerCharacteristics ccell("cell");
     ccell.setArrivingConnections(1);
     ccell.setLeavingConnections(1);
     ccell.setType(ContainerNode::close);
     ccell.addFunctions(FunctionSet::FUNCTIONS_FLAG_MAP.at(Function::measure_od));
+    ccell.addWorkingRange(Function::measure_od, odRange);
     containerCharacteristics.push_back(ccell);
 
     ContainerCharacteristics cwaste("waste");
