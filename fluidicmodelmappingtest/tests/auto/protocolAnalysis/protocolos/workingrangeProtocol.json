@@ -1,0 +1,126 @@
+{
+  "tittle": "insert name",
+  "linkedBlocks": [
+    [
+      {
+        "timeOfOperation": "0",
+        "timeOfOperation_units": "s",
+        "linked": "FALSE",
+        "duration": "3",
+        "duration_units": "s",
+        "block_type": "measurement",
+        "measurement_type": "1",
+        "measurement_frequency": {
+          "block_type": "math_number",
+          "value": "50"
+        },
+        "unit_frequency": "hz",
+        "data_reference": {
+          "block_type": "variables_get",
+          "variable": "flag"
+        },
+        "source": {
+          "block_type": "container",
+          "containerName": "A",
+          "type": "1",
+          "destiny": "Ambient",
+          "initialVolume": "0",
+          "initialVolumeUnits": "ml"
+        },
+        "wavelengthnum": {
+          "block_type": "math_number",
+          "value": "650"
+        },
+        "wavelengthnum_units": "nm"
+      },
+      {
+        "timeOfOperation": "-1",
+        "timeOfOperation_units": "ms",
+        "linked": "TRUE",
+        "duration": "2",
+        "duration_units": "s",
+        "block_type": "centrifugation",
+        "speed": {
+          "block_type": "math_number",
+          "value": "50"
+        },
+        "speed_units": "hz",
+        "temperature": {
+          "block_type": "math_number",
+          "value": "26"
+        },
+        "temperature_units": "c",
+        "source": {
+          "block_type": "container",
+          "containerName": "A",
+          "type": "1",
+          "destiny": "Ambient",
+          "initialVolume": "0",
+          "initialVolumeUnits": "ml"
+        }
+      },
+      {
+        "timeOfOperation": "-1",
+        "timeOfOperation_units": "ms",
+        "linked": "TRUE",
+        "duration": "2",
+        "duration_units": "s",
+        "block_type": "centrifugation",
+        "speed": {
+          "block_type": "math_number",
+          "value": "25"
+        },
+        "speed_units": "hz",
+        "temperature": {
+          "block_type": "math_number",
+          "value": "26"
+        },
+        "temperature_units": "c",
+        "source": {
+          "block_type": "container",
+          "containerName": "A",
+          "type": "1",
+          "destiny": "Ambient",
+          "initialVolume": "0",
+          "initialVolumeUnits": "ml"
+        }
+      },
+      {
+        "timeOfOperation": "-1",
+        "timeOfOperation_units": "ms",
+        "linked": "TRUE",
+        "duration": "2",
+        "duration_units": "s",
+        "block_type": "measurement",
+        "measurement_type": "2",
+        "measurement_frequency": {
+          "block_type": "math_number",
+          "value": "25"
+        },
+        "unit_frequency": "hz",
+        "data_reference": {
+          "block_type": "variables_get",
+          "variable": "flag"
+        },
+        "source": {
+          "block_type": "container",
+          "containerName": "A",
+          "type": "1",
+          "destiny": "Ambient",
+          "initialVolume": "0",
+          "initialVolumeUnits": "ml"
+        },
+        "excitation": {
+          "block_type": "math_number",
+          "value": "650"
+        },
+        "excitation_units": "nm",
+        "emission": {
+          "block_type": "math_number",
+          "value": "680"
+        },
+        "emission_units": "nm"
+      }
+    ]
+  ]
+}
