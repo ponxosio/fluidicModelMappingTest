@@ -1,5 +1,5 @@
 {
-  "tittle": "turbidostat",
+  "tittle": "if variable set",
   "linkedBlocks": [
     [
       {
@@ -17,7 +17,7 @@
         "variable": "od",
         "value": {
           "block_type": "math_number",
-          "value": "0"
+          "value": "300"
         },
         "timeOfOperation": "0",
         "timeOfOperation_units": "ms"
@@ -43,7 +43,7 @@
             "timeOfOperation": "-1",
             "timeOfOperation_units": "ms",
             "linked": "TRUE",
-            "duration": "1",
+            "duration": "2",
             "duration_units": "s",
             "block_type": "measurement",
             "measurement_type": "1",
@@ -106,9 +106,9 @@
           },
           {
             "timeOfOperation": "-1",
-            "timeOfOperation_units": "s",
+            "timeOfOperation_units": "ms",
             "linked": "TRUE",
-            "duration": "30",
+            "duration": "2",
             "duration_units": "s",
             "block_type": "continuous_flow",
             "source": {
@@ -117,9 +117,9 @@
                 {
                   "block_type": "container",
                   "containerName": "media",
-                  "type": "4",
+                  "type": "1",
                   "destiny": "Ambient",
-                  "initialVolume": "100",
+                  "initialVolume": "0",
                   "initialVolumeUnits": "ml"
                 },
                 {
@@ -133,7 +133,7 @@
                 {
                   "block_type": "container",
                   "containerName": "waste",
-                  "type": "4",
+                  "type": "1",
                   "destiny": "Ambient",
                   "initialVolume": "0",
                   "initialVolumeUnits": "ml"
@@ -149,8 +149,51 @@
           }
         ],
         "timeOfOperation": "0",
-        "timeOfOperation_units": "s",
+        "timeOfOperation_units": "ms",
         "linked": "FALSE"
+      },
+      {
+        "timeOfOperation": "-1",
+        "timeOfOperation_units": "ms",
+        "linked": "TRUE",
+        "duration": "2",
+        "duration_units": "s",
+        "block_type": "continuous_flow",
+        "source": {
+          "block_type": "containerList",
+          "containerList": [
+            {
+              "block_type": "container",
+              "containerName": "poison",
+              "type": "1",
+              "destiny": "Ambient",
+              "initialVolume": "0",
+              "initialVolumeUnits": "ml"
+            },
+            {
+              "block_type": "container",
+              "containerName": "cell",
+              "type": "1",
+              "destiny": "Ambient",
+              "initialVolume": "0",
+              "initialVolumeUnits": "ml"
+            },
+            {
+              "block_type": "container",
+              "containerName": "waste",
+              "type": "1",
+              "destiny": "Ambient",
+              "initialVolume": "0",
+              "initialVolumeUnits": "ml"
+            }
+          ]
+        },
+        "rate": {
+          "block_type": "variables_get",
+          "variable": "rate"
+        },
+        "rate_volume_units": "ml",
+        "rate_time_units": "hr"
       }
     ]
   ]

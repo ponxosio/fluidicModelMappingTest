@@ -13,7 +13,8 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += tst_protocolanalysistest.cpp
+SOURCES += tst_protocolanalysistest.cpp \
+    stringactuatorsinterface.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 debug {
@@ -78,3 +79,6 @@ LIBS += -L$$quote(X:\swipl\lib) -llibswipl
 
 RESOURCES += \
     protocols.qrc
+
+HEADERS += \
+    stringactuatorsinterface.h

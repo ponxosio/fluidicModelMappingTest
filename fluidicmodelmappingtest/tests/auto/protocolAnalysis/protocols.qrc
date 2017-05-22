@@ -4,5 +4,7 @@
         <file>protocolos/workingrangeProtocol.json</file>
         <file>protocolos/paralelleProtocol.json</file>
         <file>protocolos/trubidostat.json</file>
+        <file>protocolos/ifColission.json</file>
+        <file>protocolos/ifNormal.json</file>
     </qresource>
 </RCC>
