@@ -41,6 +41,9 @@ debug {
 
     INCLUDEPATH += X:\bioblocksTranslation\dll_debug\include
     LIBS += -L$$quote(X:\bioblocksTranslation\dll_debug\bin) -lbioblocksTranslation
+
+    INCLUDEPATH += X:\bioblocksExecution\dll_debug\include
+    LIBS += -L$$quote(X:\bioblocksExecution\dll_debug\bin) -lbioblocksExecution
 }
 
 !debug {
@@ -67,6 +70,9 @@ debug {
 
     INCLUDEPATH += X:\bioblocksTranslation\dll_release\include
     LIBS += -L$$quote(X:\bioblocksTranslation\dll_release\bin) -lbioblocksTranslation
+
+    INCLUDEPATH += X:\bioblocksExecution\dll_debug\include
+    LIBS += -L$$quote(X:\bioblocksExecution\dll_debug\bin) -lbioblocksExecution
 }
 
 INCLUDEPATH += X:\libraries\json-2.1.1\src

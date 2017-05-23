@@ -13,8 +13,9 @@
 
 #include <fluidicmodelmapping/heuristic/containercharacteristics.h>
 #include <fluidicmodelmapping/heuristic/topologyheuristic.h>
-#include <fluidicmodelmapping/protocolAnalysis/machineflowstringadapter.h>
 #include <fluidicmodelmapping/searchalgorithms/astarsearch.h>
+
+#include <utils/machineflowstringadapter.h>
 
 class AstartsearchTest : public QObject
 {

@@ -5,6 +5,8 @@
 
 #include <sstream>
 
+#include <bioblocksExecution/bioblocksSimulation/bioblocksrunningsimulator.h>
+
 #include <bioblocksTranslation/bioblockstranslator.h>
 #include <bioblocksTranslation/logicblocksmanager.h>
 
@@ -67,7 +69,9 @@ void ProtocolAnalysisTest::switchingFlowsTest()
 
             qDebug() << protocol->toString().c_str();
 
-            AnalysisExecutor executor(protocol, logicBlocks, 300 * units::ml/units::hr);
+            std::shared_ptr<BioBlocksRunningSimulator> simulator = std::make_shared<BioBlocksRunningSimulator>(protocol, logicBlocks);
+
+            AnalysisExecutor executor(simulator, 300 * units::ml/units::hr);
             const std::vector<ContainerCharacteristics> & ccVector(executor.getVCVector());
 
             std::vector<std::string> generatedStrCcVector;
@@ -133,13 +137,15 @@ void ProtocolAnalysisTest::parallelFlowsTest() {
         try {
             copyResourceFile(":/protocol/protocolos/paralelleProtocol.json", tempFile);
 
+            std::shared_ptr<LogicBlocksManager> logicBlocks = std::make_shared<LogicBlocksManager>();
             BioBlocksTranslator translator(5*units::s, tempFile->fileName().toStdString());
-            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile();
+            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicBlocks);
 
             qDebug() << protocol->toString().c_str();
 
-            std::shared_ptr<LogicBlocksManager> logicBlocks = std::make_shared<LogicBlocksManager>();
-            AnalysisExecutor executor(protocol, logicBlocks, 300 * units::ml/units::hr);
+            std::shared_ptr<BioBlocksRunningSimulator> simulator = std::make_shared<BioBlocksRunningSimulator>(protocol, logicBlocks);
+
+            AnalysisExecutor executor(simulator, 300 * units::ml/units::hr);
             const std::vector<ContainerCharacteristics> & ccVector(executor.getVCVector());
 
             std::vector<std::string> generatedStrCcVector;
@@ -205,13 +211,15 @@ void ProtocolAnalysisTest::workingRangesTest() {
         try {
             copyResourceFile(":/protocol/protocolos/workingrangeProtocol.json", tempFile);
 
-            BioBlocksTranslator translator(200*units::ms, tempFile->fileName().toStdString());
-            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile();
+            std::shared_ptr<LogicBlocksManager> logicBlocks = std::make_shared<LogicBlocksManager>();
+            BioBlocksTranslator translator(1*units::s, tempFile->fileName().toStdString());
+            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicBlocks);
 
             qDebug() << protocol->toString().c_str();
 
-            std::shared_ptr<LogicBlocksManager> logicBlocks = std::make_shared<LogicBlocksManager>();
-            AnalysisExecutor executor(protocol, logicBlocks, 300 * units::ml/units::hr);
+            std::shared_ptr<BioBlocksRunningSimulator> simulator = std::make_shared<BioBlocksRunningSimulator>(protocol, logicBlocks);
+
+            AnalysisExecutor executor(simulator, 300 * units::ml/units::hr);
             const std::vector<ContainerCharacteristics> & ccVector(executor.getVCVector());
 
             std::vector<std::string> generatedStrCcVector;
@@ -276,13 +284,15 @@ void ProtocolAnalysisTest::turbidostatTest() {
         try {
             copyResourceFile(":/protocol/protocolos/trubidostat.json", tempFile);
 
-            std::shared_ptr<LogicBlocksManager> logicManager = std::make_shared<LogicBlocksManager>();
+            std::shared_ptr<LogicBlocksManager> logicBlocks = std::make_shared<LogicBlocksManager>();
             BioBlocksTranslator translator(1*units::s, tempFile->fileName().toStdString());
-            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicManager);
+            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicBlocks);
 
             qDebug() << protocol->toString().c_str();
 
-            AnalysisExecutor executor(protocol, logicManager, 300 * units::ml/units::hr);
+            std::shared_ptr<BioBlocksRunningSimulator> simulator = std::make_shared<BioBlocksRunningSimulator>(protocol, logicBlocks);
+
+            AnalysisExecutor executor(simulator, 300 * units::ml/units::hr);
             const std::vector<ContainerCharacteristics> & ccVector(executor.getVCVector());
 
             std::vector<std::string> generatedStrCcVector;
@@ -350,13 +360,15 @@ void ProtocolAnalysisTest::ifColissionTest() {
         try {
             copyResourceFile(":/protocol/protocolos/ifColission.json", tempFile);
 
-            std::shared_ptr<LogicBlocksManager> logicManager = std::make_shared<LogicBlocksManager>();
+            std::shared_ptr<LogicBlocksManager> logicBlocks = std::make_shared<LogicBlocksManager>();
             BioBlocksTranslator translator(1*units::s, tempFile->fileName().toStdString());
-            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicManager);
+            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicBlocks);
 
             qDebug() << protocol->toString().c_str();
 
-            AnalysisExecutor executor(protocol, logicManager, 300 * units::ml/units::hr);
+            std::shared_ptr<BioBlocksRunningSimulator> simulator = std::make_shared<BioBlocksRunningSimulator>(protocol, logicBlocks);
+
+            AnalysisExecutor executor(simulator, 300 * units::ml/units::hr);
             const std::vector<ContainerCharacteristics> & ccVector(executor.getVCVector());
 
             std::vector<std::string> generatedStrCcVector;
@@ -424,13 +436,15 @@ void ProtocolAnalysisTest::ifNormalTest() {
         try {
             copyResourceFile(":/protocol/protocolos/ifNormal.json", tempFile);
 
-            std::shared_ptr<LogicBlocksManager> logicManager = std::make_shared<LogicBlocksManager>();
+            std::shared_ptr<LogicBlocksManager> logicBlocks = std::make_shared<LogicBlocksManager>();
             BioBlocksTranslator translator(1*units::s, tempFile->fileName().toStdString());
-            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicManager);
+            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicBlocks);
 
             qDebug() << protocol->toString().c_str();
 
-            AnalysisExecutor executor(protocol, logicManager, 300 * units::ml/units::hr);
+            std::shared_ptr<BioBlocksRunningSimulator> simulator = std::make_shared<BioBlocksRunningSimulator>(protocol, logicBlocks);
+
+            AnalysisExecutor executor(simulator, 300 * units::ml/units::hr);
             const std::vector<ContainerCharacteristics> & ccVector(executor.getVCVector());
 
             std::vector<std::string> generatedStrCcVector;

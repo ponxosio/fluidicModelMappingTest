@@ -1,7 +1,7 @@
 #include <QString>
 #include <QtTest>
 
-#include <fluidicmodelmapping/protocolAnalysis/machineflowstringadapter.h>
+#include <utils/machineflowstringadapter.h>
 
 class MachineflowadapterTest : public QObject
 {
