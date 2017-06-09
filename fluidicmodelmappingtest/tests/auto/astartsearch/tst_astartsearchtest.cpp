@@ -63,7 +63,8 @@ void AstartsearchTest::turbidostat_simpleMachine()
         std::shared_ptr<HeuristicInterface> topologyH = std::make_shared<TopologyHeuristic>(model->getMachineGraph(), protocolContainersCharacts);
         AStarSearch aSearch(model, topologyH, protocolContainersCharacts, flowsinTime);
 
-        QVERIFY2(aSearch.startSearch(), "search fail");
+        std::string errorMsg;
+        QVERIFY2(aSearch.startSearch(errorMsg), "search fail");
 
         const SearchInterface::RelationTable & solution = aSearch.getRelationTable().back();
         for(const auto & itTuple: solution) {
@@ -167,7 +168,7 @@ void AstartsearchTest::makeTurbidostatAnalysis(std::vector<ContainerCharacterist
     flowsintime.push_back(newFlow);
 
     ContainerCharacteristics cmedia("media");
-    cmedia.setLeavingConnections(1);
+    cmedia.setNumberConnections(1);
     cmedia.setType(ContainerNode::open);
     containerCharacteristics.push_back(cmedia);
 
@@ -175,15 +176,14 @@ void AstartsearchTest::makeTurbidostatAnalysis(std::vector<ContainerCharacterist
             std::make_shared<MeasureOdWorkingRange>(650 * units::nm, 650 * units::nm);
 
     ContainerCharacteristics ccell("cell");
-    ccell.setArrivingConnections(1);
-    ccell.setLeavingConnections(1);
+    ccell.setNumberConnections(2);
     ccell.setType(ContainerNode::close);
     ccell.addFunctions(FunctionSet::FUNCTIONS_FLAG_MAP.at(Function::measure_od));
     ccell.addWorkingRange(Function::measure_od, odRange);
     containerCharacteristics.push_back(ccell);
 
     ContainerCharacteristics cwaste("waste");
-    cwaste.setArrivingConnections(1);
+    cwaste.setNumberConnections(1);
     cwaste.setType(ContainerNode::open);
     containerCharacteristics.push_back(cwaste);
 }

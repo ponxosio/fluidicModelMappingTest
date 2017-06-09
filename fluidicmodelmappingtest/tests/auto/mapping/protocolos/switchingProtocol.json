@@ -1,0 +1,146 @@
+
+
+{
+  "tittle": "swichingflows",
+  "linkedBlocks": [
+    [
+      {
+        "block_type": "variables_set",
+        "variable": "counter",
+        "value": {
+          "block_type": "math_number",
+          "value": "0"
+        },
+        "timeOfOperation": "0",
+        "timeOfOperation_units": "ms"
+      }
+    ],
+    [
+      {
+        "block_type": "controls_whileUntil",
+        "condition": {
+          "block_type": "logic_compare",
+          "left": {
+            "block_type": "variables_get",
+            "variable": "counter"
+          },
+          "rigth": {
+            "block_type": "math_number",
+            "value": "10"
+          },
+          "op": "LT"
+        },
+        "branches": [
+          {
+            "timeOfOperation": "-1",
+            "timeOfOperation_units": "s",
+            "linked": "TRUE",
+            "duration": "30",
+            "duration_units": "minute",
+            "block_type": "continuous_flow",
+            "source": {
+              "block_type": "containerList",
+              "containerList": [
+                {
+                  "block_type": "container",
+                  "containerName": "media1",
+                  "type": "4",
+                  "destiny": "Ambient",
+                  "initialVolume": "100",
+                  "initialVolumeUnits": "ml"
+                },
+                {
+                  "block_type": "container",
+                  "containerName": "cell",
+                  "type": "1",
+                  "destiny": "Ambient",
+                  "initialVolume": "0",
+                  "initialVolumeUnits": "ml"
+                },
+                {
+                  "block_type": "container",
+                  "containerName": "waste",
+                  "type": "4",
+                  "destiny": "Ambient",
+                  "initialVolume": "0",
+                  "initialVolumeUnits": "ml"
+                }
+              ]
+            },
+            "rate": {
+              "block_type": "math_number",
+              "value": "200"
+            },
+            "rate_volume_units": "ml",
+            "rate_time_units": "hr"
+          },
+          {
+            "timeOfOperation": "-1",
+            "timeOfOperation_units": "s",
+            "linked": "TRUE",
+            "duration": "30",
+            "duration_units": "minute",
+            "block_type": "continuous_flow",
+            "source": {
+              "block_type": "containerList",
+              "containerList": [
+                {
+                  "block_type": "container",
+                  "containerName": "media2",
+                  "type": "4",
+                  "destiny": "Ambient",
+                  "initialVolume": "100",
+                  "initialVolumeUnits": "ml"
+                },
+                {
+                  "block_type": "container",
+                  "containerName": "cell",
+                  "type": "1",
+                  "destiny": "Ambient",
+                  "initialVolume": "0",
+                  "initialVolumeUnits": "ml"
+                },
+                {
+                  "block_type": "container",
+                  "containerName": "waste",
+                  "type": "4",
+                  "destiny": "Ambient",
+                  "initialVolume": "0",
+                  "initialVolumeUnits": "ml"
+                }
+              ]
+            },
+            "rate": {
+              "block_type": "math_number",
+              "value": "200"
+            },
+            "rate_volume_units": "ml",
+            "rate_time_units": "hr"
+          },
+          {
+            "block_type": "variables_set",
+            "variable": "counter",
+            "value": {
+              "block_type": "math_arithmetic",
+              "left": {
+                "block_type": "variables_get",
+                "variable": "counter"
+              },
+              "rigth": {
+                "block_type": "math_number",
+                "value": "1"
+              },
+              "op": "ADD"
+            },
+            "timeOfOperation": "-1",
+            "timeOfOperation_units": "ms"
+          }
+        ],
+        "timeOfOperation": "0",
+        "timeOfOperation_units": "ms",
+        "linked": "FALSE"
+      }
+    ]
+  ]
+}
+

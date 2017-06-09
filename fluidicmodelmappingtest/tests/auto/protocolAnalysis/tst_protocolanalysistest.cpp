@@ -39,9 +39,11 @@ private:
 
 private Q_SLOTS:
     void switchingFlowsTest();
+    void switchingFlows2Test();
     void parallelFlowsTest();
     void workingRangesTest();
     void turbidostatTest();
+    void turbidostat2Test();
     void ifColissionTest();
     void ifNormalTest();
 };
@@ -91,12 +93,88 @@ void ProtocolAnalysisTest::switchingFlowsTest()
             qDebug() << generatedFlowsStr.c_str();
 
             std::vector<std::string> expectedStrCcVector {
-                    "name: A;arriving connections: 0;leaving connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: B;arriving connections: 2;leaving connections: 1;functions: 0000000000000;type: 1;workingRanges[]",
-                    "name: C;arriving connections: 1;leaving connections: 0;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: D;arriving connections: 0;leaving connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
+                    "name: A;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: B;number connections: 3;functions: 0000000000000;type: 1;workingRanges[]",
+                    "name: C;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: D;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
                 };
             std::string expectedFlowsStr = "[[{[A,B,C,],300 ml/hr},],[{[D,B,C,],300 ml/hr},],]";
+
+            qDebug() << "expected:";
+            qDebug() << "containers";
+            for(const std::string & str : expectedStrCcVector) {
+                qDebug() << str.c_str();
+            }
+            qDebug() << "flows in time:";
+            qDebug() << expectedFlowsStr.c_str();
+
+            QVERIFY2(generatedFlowsStr.compare(expectedFlowsStr) == 0, "flows in time are not the same, check debug for more info");
+
+            QVERIFY2(expectedStrCcVector.size() == generatedStrCcVector.size(), "expected and generated container characteristic has not the same size");
+            for(int i = 0; i < expectedStrCcVector.size(); i++) {
+                QVERIFY2(expectedStrCcVector[i].compare(generatedStrCcVector[i]) == 0,
+                         std::string(std::to_string(i) + " position in container characteristics vector is not as expected, check debug for more info").c_str());
+            }
+        } catch (std::exception & e) {
+            delete tempFile;
+            QFAIL(e.what());
+        }
+    } else {
+        delete tempFile;
+        QFAIL("imposible to create temporary file");
+    }
+    delete tempFile;
+}
+
+/*
+ * countre = 0;
+ * while[0s:x](counter < 10) {
+ *  setContinuousflow[x:30min](media1,cell,waste,300ml/hr);
+ *  setContinuousflow[x:30min](media2,cell,waste,300ml/hr);
+ *  counter = counter + 1;
+ * }
+ */
+void ProtocolAnalysisTest::switchingFlows2Test()
+{
+    QTemporaryFile* tempFile = new QTemporaryFile();
+    if (tempFile->open()) {
+        try {
+            copyResourceFile(":/protocol/protocolos/switchingProtocol2.json", tempFile);
+
+            std::shared_ptr<LogicBlocksManager> logicBlocks = std::make_shared<LogicBlocksManager>();
+            BioBlocksTranslator translator(1*units::minute, tempFile->fileName().toStdString());
+            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicBlocks);
+
+            qDebug() << protocol->toString().c_str();
+
+            std::shared_ptr<BioBlocksRunningSimulator> simulator = std::make_shared<BioBlocksRunningSimulator>(protocol, logicBlocks);
+
+            AnalysisExecutor executor(simulator, 300 * units::ml/units::hr);
+            const std::vector<ContainerCharacteristics> & ccVector(executor.getVCVector());
+
+            std::vector<std::string> generatedStrCcVector;
+            generatedStrCcVector.reserve(ccVector.size());
+
+            qDebug() << "generated:";
+            qDebug() << "containers:";
+            for(const ContainerCharacteristics & container: ccVector) {
+                std::string tempStr = ccToString(container);
+
+                qDebug() << tempStr.c_str();
+                generatedStrCcVector.push_back(tempStr);
+            }
+
+            std::string generatedFlowsStr = flowsInTimeToString(executor.getFlowsInTime());
+            qDebug() << "flows in time:";
+            qDebug() << generatedFlowsStr.c_str();
+
+            std::vector<std::string> expectedStrCcVector {
+                    "name: media1;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: cell;number connections: 3;functions: 0000000000000;type: 1;workingRanges[]",
+                    "name: waste;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: media2;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
+                };
+            std::string expectedFlowsStr = "[[{[media1,cell,waste,],300 ml/hr},],[{[media2,cell,waste,],300 ml/hr},],]";
 
             qDebug() << "expected:";
             qDebug() << "containers";
@@ -165,10 +243,10 @@ void ProtocolAnalysisTest::parallelFlowsTest() {
             qDebug() << generatedFlowsStr.c_str();
 
             std::vector<std::string> expectedStrCcVector {
-                    "name: A;arriving connections: 0;leaving connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: B;arriving connections: 2;leaving connections: 1;functions: 0000000000000;type: 1;workingRanges[]",
-                    "name: C;arriving connections: 1;leaving connections: 0;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: D;arriving connections: 0;leaving connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
+                    "name: A;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: B;number connections: 3;functions: 0000000000000;type: 1;workingRanges[]",
+                    "name: C;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: D;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
                 };
             std::string expectedFlowsStr = "[[{[A,B,C,],300 ml/hr},{[D,B,C,],300 ml/hr},],]";
 
@@ -239,7 +317,7 @@ void ProtocolAnalysisTest::workingRangesTest() {
             qDebug() << generatedFlowsStr.c_str();
 
             std::vector<std::string> expectedStrCcVector {
-                    "name: A;arriving connections: 0;leaving connections: 0;functions: 0100001010100;type: 2;workingRanges[4:[650 nm, 650nm],2:[26 Cº, 26Cº],6:[25 Hz, 50Hz],11:emission:[680 nm, 680nm]excitation:[650 nm, 650nm],]"
+                    "name: A;number connections: 0;functions: 0100001010100;type: 2;workingRanges[4:[650 nm, 650nm],2:[26 Cº, 26Cº],6:[25 Hz, 50Hz],11:emission:[680 nm, 680nm]excitation:[650 nm, 650nm],]"
                 };
             std::string expectedFlowsStr = "[]";
 
@@ -277,6 +355,7 @@ void ProtocolAnalysisTest::workingRangesTest() {
  *  rate = rate - (rate *(od - 600));
  *  setContinuosFlow[x:30s]([media,cell,waste], rate ml/hr);
  * }
+ * setContinuosFlow[x:30s]([posion,cell,waste], rate ml/hr);
  */
 void ProtocolAnalysisTest::turbidostatTest() {
     QTemporaryFile* tempFile = new QTemporaryFile();
@@ -312,12 +391,87 @@ void ProtocolAnalysisTest::turbidostatTest() {
             qDebug() << generatedFlowsStr.c_str();
 
             std::vector<std::string> expectedStrCcVector {
-                    "name: cell;arriving connections: 2;leaving connections: 1;functions: 0000000010000;type: 1;workingRanges[4:[650 nm, 650nm],]",
-                    "name: waste;arriving connections: 1;leaving connections: 0;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: media;arriving connections: 0;leaving connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: poison;arriving connections: 0;leaving connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
+                    "name: cell;number connections: 3;functions: 0000000010000;type: 1;workingRanges[4:[650 nm, 650nm],]",
+                    "name: waste;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: media;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: poison;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
                 };
-            std::string expectedFlowsStr = "[[{[media,cell,waste,],180300 ml/hr},],[{[poison,cell,waste,],180300 ml/hr},],]";
+            std::string expectedFlowsStr = "[[{[media,cell,waste,],300 ml/hr},],[{[poison,cell,waste,],300 ml/hr},],]";
+
+            qDebug() << "expected:";
+            qDebug() << "containers";
+            for(const std::string & str : expectedStrCcVector) {
+                qDebug() << str.c_str();
+            }
+            qDebug() << "flows in time:";
+            qDebug() << expectedFlowsStr.c_str();
+
+            QVERIFY2(generatedFlowsStr.compare(expectedFlowsStr) == 0, "flows in time are not the same, check debug for more info");
+
+            QVERIFY2(expectedStrCcVector.size() == generatedStrCcVector.size(), "expected and generated container characteristic has not the same size");
+            for(int i = 0; i < expectedStrCcVector.size(); i++) {
+                QVERIFY2(expectedStrCcVector[i].compare(generatedStrCcVector[i]) == 0,
+                         std::string(std::to_string(i) + " position in container characteristics vector is not as expected, check debug for more info").c_str());
+            }
+        } catch (std::exception & e) {
+            delete tempFile;
+            QFAIL(e.what());
+        }
+    } else {
+        delete tempFile;
+        QFAIL("imposible to create temporary file");
+    }
+    delete tempFile;
+}
+
+/*
+ * rate = 300;
+ * od = 0;
+ * while[0s:-]( od < 600) {
+ *  od = measureOD[x:2s](cell,650nm);
+ *  rate = rate - (rate *(od - 600));
+ *  setContinuosFlow[x:30s]([media,cell,waste], rate ml/hr);
+ * }
+ */
+void ProtocolAnalysisTest::turbidostat2Test() {
+    QTemporaryFile* tempFile = new QTemporaryFile();
+    if (tempFile->open()) {
+        try {
+            copyResourceFile(":/protocol/protocolos/trubidostat2.json", tempFile);
+
+            std::shared_ptr<LogicBlocksManager> logicBlocks = std::make_shared<LogicBlocksManager>();
+            BioBlocksTranslator translator(1*units::s, tempFile->fileName().toStdString());
+            std::shared_ptr<ProtocolGraph> protocol = translator.translateFile(logicBlocks);
+
+            qDebug() << protocol->toString().c_str();
+
+            std::shared_ptr<BioBlocksRunningSimulator> simulator = std::make_shared<BioBlocksRunningSimulator>(protocol, logicBlocks);
+
+            AnalysisExecutor executor(simulator, 300 * units::ml/units::hr);
+            const std::vector<ContainerCharacteristics> & ccVector(executor.getVCVector());
+
+            std::vector<std::string> generatedStrCcVector;
+            generatedStrCcVector.reserve(ccVector.size());
+
+            qDebug() << "generated:";
+            qDebug() << "containers:";
+            for(const ContainerCharacteristics & container: ccVector) {
+                std::string tempStr = ccToString(container);
+
+                qDebug() << tempStr.c_str();
+                generatedStrCcVector.push_back(tempStr);
+            }
+
+            std::string generatedFlowsStr = flowsInTimeToString(executor.getFlowsInTime());
+            qDebug() << "flows in time:";
+            qDebug() << generatedFlowsStr.c_str();
+
+            std::vector<std::string> expectedStrCcVector {
+                    "name: cell;number connections: 2;functions: 0000000010000;type: 1;workingRanges[4:[650 nm, 650nm],]",
+                    "name: waste;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: media;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
+                };
+            std::string expectedFlowsStr = "[[{[media,cell,waste,],300 ml/hr},],]";
 
             qDebug() << "expected:";
             qDebug() << "containers";
@@ -388,11 +542,11 @@ void ProtocolAnalysisTest::ifColissionTest() {
             qDebug() << generatedFlowsStr.c_str();
 
             std::vector<std::string> expectedStrCcVector {
-                    "name: A;arriving connections: 1;leaving connections: 0;functions: 0000000010000;type: 0;workingRanges[4:[650 nm, 650nm],]",
-                    "name: B;arriving connections: 0;leaving connections: 2;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: C;arriving connections: 1;leaving connections: 0;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: D;arriving connections: 0;leaving connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: E;arriving connections: 1;leaving connections: 0;functions: 0000000000000;type: 0;workingRanges[]"
+                    "name: A;number connections: 1;functions: 0000000010000;type: 0;workingRanges[4:[650 nm, 650nm],]",
+                    "name: B;number connections: 2;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: C;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: D;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: E;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
                 };
             std::string expectedFlowsStr = "[[{[B,A,],300 ml/hr},],[{[B,C,],300 ml/hr},],[{[B,C,],300 ml/hr},{[D,E,],300 ml/hr},],[{[D,E,],300 ml/hr},],]";
 
@@ -464,9 +618,9 @@ void ProtocolAnalysisTest::ifNormalTest() {
             qDebug() << generatedFlowsStr.c_str();
 
             std::vector<std::string> expectedStrCcVector {
-                    "name: A;arriving connections: 1;leaving connections: 0;functions: 0000000010000;type: 0;workingRanges[4:[650 nm, 650nm],]",
-                    "name: B;arriving connections: 0;leaving connections: 2;functions: 0000000000000;type: 0;workingRanges[]",
-                    "name: C;arriving connections: 1;leaving connections: 0;functions: 0000000000000;type: 0;workingRanges[]"
+                    "name: A;number connections: 1;functions: 0000000010000;type: 0;workingRanges[4:[650 nm, 650nm],]",
+                    "name: B;number connections: 2;functions: 0000000000000;type: 0;workingRanges[]",
+                    "name: C;number connections: 1;functions: 0000000000000;type: 0;workingRanges[]"
                 };
             std::string expectedFlowsStr = "[[{[B,A,],300 ml/hr},],[{[B,C,],300 ml/hr},],]";
 
@@ -516,8 +670,7 @@ std::string ProtocolAnalysisTest::ccToString(const ContainerCharacteristics & co
     std::stringstream stream;
 
     stream << "name: " << container.getName() << ";";
-    stream << "arriving connections: " << container.getArrivingConnections() << ";";
-    stream << "leaving connections: " << container.getLeavingConnections() << ";";
+    stream << "number connections: " << container.getNumberConnections() << ";";
 
     std::string functions = container.getNeccesaryFunctionsMask().to_string();
     stream << "functions: " << functions << ";";
@@ -560,29 +713,6 @@ std::string ProtocolAnalysisTest::flowsInTimeToString(const std::vector<MachineF
     stream << "]";
     return stream.str();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 QTEST_APPLESS_MAIN(ProtocolAnalysisTest)
 

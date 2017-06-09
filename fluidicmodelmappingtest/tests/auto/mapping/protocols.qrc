@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/protocol">
+        <file>protocolos/paralelleProtocol.json</file>
+        <file>protocolos/switchingProtocol.json</file>
+        <file>protocolos/trubidostat.json</file>
+    </qresource>
+</RCC>

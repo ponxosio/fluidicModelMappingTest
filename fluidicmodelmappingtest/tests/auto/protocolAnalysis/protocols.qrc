@@ -6,5 +6,7 @@
         <file>protocolos/trubidostat.json</file>
         <file>protocolos/ifColission.json</file>
         <file>protocolos/ifNormal.json</file>
+        <file>protocolos/trubidostat2.json</file>
+        <file>protocolos/switchingProtocol2.json</file>
     </qresource>
 </RCC>
